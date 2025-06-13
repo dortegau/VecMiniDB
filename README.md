@@ -131,6 +131,87 @@ database.insert(vector); // Automatically logged to WAL
 ((FileVectorRepository) repository).checkpoint(); // Forces WAL clearance
 ```
 
+## Interactive CLI (REPL)
+
+VecMiniDB includes a powerful command-line interface for interactive vector database operations:
+
+### Installation
+
+```bash
+# Build and install the CLI
+./install-cli.sh
+
+# Or run directly with Java
+java -jar target/vecminidb-cli.jar
+```
+
+### CLI Commands
+
+#### Data Operations
+- `insert <id> <text>` - Insert text as vector with given ID
+- `query <text> [limit]` - Find similar vectors (default limit: 5)
+- `vector <id>` - Show vector values for given ID
+- `meta <id>` - Show metadata and statistics for vector
+
+#### Database Operations
+- `list` - List all vector IDs
+- `size` - Show number of vectors in database
+- `stats` - Show database statistics
+- `vocab` - Show text embedder vocabulary
+
+#### Control Commands
+- `help` - Show help message
+- `exit` - Exit the REPL
+
+### Example Session
+
+```bash
+$ vecminidb
+╔══════════════════════════════════════════════════════════╗
+║                    VecMiniDB REPL v1.0.0                   ║
+║           Interactive Vector Database CLI                   ║
+╚══════════════════════════════════════════════════════════╝
+
+vecminidb> insert doc1 "Machine learning is fascinating"
+✓ Inserted vector 'doc1' (64 dimensions)
+
+vecminidb> insert doc2 "Deep learning uses neural networks"
+✓ Inserted vector 'doc2' (64 dimensions)
+
+vecminidb> query "artificial intelligence" 2
+Found 2 similar vectors:
+┌─────────────────────────────────────────┬─────────────┐
+│ Vector ID                               │ Similarity  │
+├─────────────────────────────────────────┼─────────────┤
+│ doc1                                    │      0.8542 │
+│ doc2                                    │      0.7891 │
+└─────────────────────────────────────────┴─────────────┘
+
+vecminidb> vector doc1
+Vector ID: doc1
+Dimensions: 64
+Values: [0.123, 0.456, 0.789, ... 0.234, 0.567] (64 dimensions)
+
+vecminidb> meta doc1
+Metadata for vector 'doc1':
+  ID: doc1
+  Dimensions: 64
+  Min value: -0.234567
+  Max value: 0.456789
+  Mean: 0.012345
+  L2 norm: 2.345678
+
+vecminidb> stats
+VecMiniDB Statistics:
+  Vectors: 2
+  Vocabulary size: 8
+  Embedding dimensions: 64
+  Estimated vector memory: 1.0 KB
+
+vecminidb> exit
+Thank you for using VecMiniDB REPL!
+```
+
 ## Similarity Algorithms
 
 VecMiniDB supports multiple similarity algorithms:
